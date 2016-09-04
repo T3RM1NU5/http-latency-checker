@@ -2,8 +2,8 @@
 import sys
 
 #Version check to warn people trying to run the code on Python 2
-if sys.version_info[0]<3:
-	print("Error this utility requires python 3 or higher")
+if sys.version_info<(3,1):
+	print("Error: This utility requires python 3.1 or higher")
 	exit()
 
 #Continue importing required libraries 
@@ -51,12 +51,12 @@ def main(argv):
 			line_number+=1 		
 
 			#Reset values to defaults
-			lattency_time = 0  			#time it takes to perform the get request
-			Size = 0		   			#Size of the requested page
-			status = ""		   			#Status of the requested page
+			latency_time = 0  			#time it takes to perform the get request
+			Size = 0					#Size of the requested page
+			status = ""					#Status of the requested page
 			status_reason = ""			#Reason why the test passed or failed
 			start_time = 0				#Holds time before GET request
-			lattency_time = 0			#Holds time after GET request
+			latency_time = 0			#Holds time after GET request
 
 			#Remove return character from URL string
 			url = url.rstrip()
@@ -87,7 +87,7 @@ def main(argv):
 
 				url_get = urllib.request.urlopen(url,timeout=1)
 				#Calculate the time between it took to complete the previous action by subtracting the current time from the start time then convert to milliseconds
-				lattency_time = round((time.time() - start_time) * 1000 )
+				latency_time = round((time.time() - start_time) * 1000 )
 				
 				#Find the size of requested page
 				size = len(url_get.read())
@@ -97,11 +97,11 @@ def main(argv):
 				status_reason = str("HTTP code " + str(url_get.code))
 			
 			#Handle the various errors that can occur during the GET request
-			except (urllib.error.HTTPError, http.client.InvalidURL, ConnectionResetError, urllib.error.URLError, socket.timeout, ssl.CertificateError, ValueError) as err:
+			except Exception as err:
 				status = "FAIL"
 				status_reason = str(err)
 				size = None
-				lattency_time = None
+				latency_time = None
 				pass
 			
 			print("URL: ",url)
@@ -110,13 +110,13 @@ def main(argv):
 
 			#Only show latency test info if the initial connection test passed
 			if (status=="PASS"):
-				print("Latency: ", lattency_time, "Milliseconds")
+				print("Latency: ", latency_time, "Milliseconds")
 				print("Size: ",size, " Bytes")
 			print("\n")
 
 		
 			#Store our current test results in a dictionary 
-			current_test_results = {'URL' : url,'status':status,"status reason":status_reason,'lattency_ms':lattency_time, 'size' : size}
+			current_test_results = {'URL' : url,'status':status,"status reason":status_reason,'latency_ms':latency_time, 'size' : size}
 			
 			#Append the current test results to the output list
 			output.append(current_test_results)
