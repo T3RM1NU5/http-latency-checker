@@ -4,51 +4,46 @@ import sys
 # Version check to warn people trying to run the code on Python 2
 if sys.version_info < (3, 1):
     print("Error: This utility requires python 3.1 or higher")
-    exit()
+    sys.exit(1)
 
 # Continue importing required libraries
 import json
 import urllib.request
 import time
-import socket
-import ssl
 import urllib.parse
-import http.client
 import os.path
+import argparse
 
 
 def main(argv):
 
-    # print usage info if no argvars are given by the user
-    if len(argv) < 2:
-        print("Usage: http-latency-checker.py url_list [output.json]")
-        print("	url_list - location of list of URLS")
-        print("	output.json - optional custom output file location")
-        return
+    #Parse user arguments
+    parser = argparse.ArgumentParser(description='Check latency of HTTP GET requests')
+    parser.add_argument("input_file_path",help='List of URLS')
+    parser.add_argument('output_file_path', nargs='?', default="output.json",
+                        help='output file path')
+    parser.add_argument("-v","--verbose", help="increase output verbosity",
+                        action="store_true")
 
-    # check to see if user supplied a second argument, if so use that as the
-    # output file
-    if len(argv) == 3:
-        print("Using custom output file: ", argv[2])
-        output_file_path = argv[2]  # custom output file location
+    #If no user arguments are given print help
+    if len(sys.argv)==1:
+        parser.print_help()
+        sys.exit(1)
 
-    # If no path was given use default output file of output.json
-    else:
-        output_file_path = 'output.json'  # default output file location
+    args = parser.parse_args()
 
-    input_file_path = argv[1]  # set input file equal to the users input
-    output = []  # initialize output list, this list will contain a list of dictionary
+    output_dic = []  # initialize output list, this list will contain a list of dictionary
 
     # Check to see if the request input file exist, if not end the program
-    if not os.path.exists(input_file_path):
-        print("Error file {} does not exist".format(input_file_path))
+    if not os.path.exists(args.input_file_path):
+        print("Error file {} does not exist".format(args.input_file_path))
         return
 
     # Intialize line_number used to keep what line of the file we are on
     line_number = 0  # Used to keep track of file line number
 
     # For every line of the input file, get the content of that line
-    with open(input_file_path) as urllist:
+    with open(args.input_file_path) as urllist:
         for url in urllist:
 
             # Increment the line number by 1
@@ -117,30 +112,32 @@ def main(argv):
                 latency_time = None
                 pass
 
-            #Print output to standard out
-            print("URL: ", url)
-            print("Status: ", status)
-            print("Status Reason: ", status_reason)
 
-            # Only show latency test info if the initial connection test passed
-            if (status == "reachable"):
-                print("Latency: ", latency_time, "Milliseconds")
-                print("Size: ", size, " Bytes")
-            print("\n")
+            if args.verbose:
+                #Print output to standard out
+                print("URL: ", url)
+                print("Status: ", status)
+                print("Status Reason: ", status_reason)
+
+                # Only show latency test info if the initial connection test passed
+                if (status == "reachable"):
+                    print("Latency: ", latency_time, "Milliseconds")
+                    print("Size: ", size, " Bytes")
+                print("\n")
 
             # Store our current test results in a dictionary
             current_test_results = {'URL': url, 'status': status,
                                     "status reason": status_reason, 'latency_ms': latency_time, 'size': size}
 
             # Append the current test results to the output list
-            output.append(current_test_results)
+            output_dic.append(current_test_results)
 
             # close the file handler
             url_get.close()
 
     # Save the test results to the drive
-    with open(output_file_path, 'w') as outputfile:
-        json.dump(output, outputfile, sort_keys=True, indent=4)
+    with open(args.output_file_path, 'w') as outputfile:
+        json.dump(output_dic, outputfile, sort_keys=True, indent=4)
 
     return 0
 
