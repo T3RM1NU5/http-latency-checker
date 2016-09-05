@@ -2,7 +2,7 @@
 HTTP Latency Checker is a small utility designed to check the status and response time of web servers
 
 ## Requirements
-	Python 3.1 or higher 
+	Python 3.2 or higher 
 
 ## Usage
 

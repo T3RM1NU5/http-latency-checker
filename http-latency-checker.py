@@ -2,7 +2,7 @@
 import sys
 
 # Version check to warn people trying to run the code on Python 2
-if sys.version_info < (3, 1):
+if sys.version_info < (3, 2):
     print("Error: This utility requires python 3.1 or higher")
     sys.exit(1)
 
