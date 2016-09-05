@@ -19,10 +19,10 @@ def main(argv):
 
     #Parse user arguments
     parser = argparse.ArgumentParser(description='Check latency of HTTP GET requests')
-    parser.add_argument("input_file_path",help='List of URLS')
-    parser.add_argument('output_file_path', nargs='?', default="output.json",
-                        help='output file path')
-    parser.add_argument("-v","--verbose", help="increase output verbosity",
+    parser.add_argument('input_file_path',help='List of URL\'S')
+    parser.add_argument('output_file_path', nargs='?', default='output.json',
+                        help='Optional output file path, default output.json')
+    parser.add_argument('-v','--verbose', help='increase output verbosity',
                         action="store_true")
 
     #If no user arguments are given print help

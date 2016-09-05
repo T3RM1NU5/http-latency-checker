@@ -6,7 +6,7 @@ HTTP Latency Checker is a small utility designed to check the status and respons
 
 ## Usage
 
-By default you only need to supply a URL list file which contains 1 URL perline however you can include a second option to change the output file location
+By default you only need to supply a URL list file which contains 1 URL perline however you can include a second option to change the output file location.  
 
 ```
 usage: http-latency-checker.py [-h] [-v] input_file_path [output_file_path]
@@ -15,14 +15,16 @@ Check latency of HTTP GET requests
 
 positional arguments:
   input_file_path   List of URLS
-  output_file_path  output file path
+  output_file_path  output file path, default output.json
 
 optional arguments:
   -h, --help        show this help message and exit
   -v, --verbose     increase output verbosity
 ```
 
-## Input File Structure
+## Input File
+
+The user is required to supply an input file that contains a list of URLS like the one bellow
 
 ```
 http://github.com
@@ -30,12 +32,12 @@ termini.me:443
 https://gnu.org:80
 ```
 
-HTTP Latency checker will by default append http:// to a URL if no scheme was given
+Note HTTP latency checker will by default append http:// to a URL if no scheme was given
 An exception is made if the port ends in 443, in this case the scheme is set to https://
 
-## Output File Structure
+## Output File
 
-The output format is a .json that looks similar to bellow
+By default http-latency-checker saves to a json file named output.json. The user can change the output file by including a second positional argument.  Bellow is an example output. 
 
 ```
 [
