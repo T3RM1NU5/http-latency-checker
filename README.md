@@ -23,8 +23,15 @@ The output format is a .json that looks similar to bellow
         "URL": "https://termini.me",
         "lattency_ms": 1132,
         "size": 3482,
-        "status": "PASS",
+        "status": "reachable",
         "status reason": "HTTP code 200"
+    },   
+    {
+        "URL": "http://foo.bar",
+        "latency_ms": null,
+        "size": null,
+        "status": "unreachable",
+        "status reason": "<urlopen error [Errno -2] Name or service not known>"
     }
 ]
 ```
