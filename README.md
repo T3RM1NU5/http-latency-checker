@@ -22,7 +22,7 @@ optional arguments:
   -v, --verbose     increase output verbosity
 ```
 
-## Input file Structure
+## Input File Structure
 
 ```
 http://github.com
@@ -33,7 +33,7 @@ https://gnu.org:80
 HTTP Latency checker will by default append http:// to a URL if no scheme was given
 An exception is made if the port ends in 443, in this case the scheme is set to https://
 
-## Output Structure
+## Output File Structure
 
 The output format is a .json that looks similar to bellow
 
