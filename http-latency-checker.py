@@ -47,7 +47,7 @@ def main(argv):
     # Intialize line_number used to keep what line of the file we are on
     line_number = 0  # Used to keep track of file line number
 
-    # For ever line of the input file, get the content of that line
+    # For every line of the input file, get the content of that line
     with open(input_file_path) as urllist:
         for url in urllist:
 
@@ -80,14 +80,16 @@ def main(argv):
                     if parsed_url.port == 443:
                         parsed_url = parsed_url._replace(scheme='https')
                         url = parsed_url.geturl()
+                # If the URL looks like this http://foo.bar:443h/ it will 
+                # trigger a warning that the URL will be considered to be 
+                # malformed and result in a non numeric port.
                 except:
-                    print('\033[93m', "Warning: Malformed url on line ",
-                          line_number, '\033[0m', "\n")
-                    pass
+                    print('\033[93m', "Warning: Malformed URL on line ",
+                          line_number, "URL will be unreachable" '\033[0m', "\n")
 
             # Attempt to connect to the request URL
             try:
-                # Set the start time to the current number of seconds since
+                # Set start_time to the current number of seconds since
                 # epoch
                 start_time = time.time()
 
@@ -104,23 +106,24 @@ def main(argv):
                 size = len(url_get.read())
 
                 # Get HTTP Status
-                status = "PASS"
+                status = "reachable"
                 status_reason = str("HTTP code " + str(url_get.code))
 
             # Handle the various errors that can occur during the GET request
             except Exception as err:
-                status = "FAIL"
+                status = "unreachable"
                 status_reason = str(err)
                 size = None
                 latency_time = None
                 pass
 
+            #Print output to standard out
             print("URL: ", url)
             print("Status: ", status)
             print("Status Reason: ", status_reason)
 
             # Only show latency test info if the initial connection test passed
-            if (status == "PASS"):
+            if (status == "reachable"):
                 print("Latency: ", latency_time, "Milliseconds")
                 print("Size: ", size, " Bytes")
             print("\n")
@@ -138,6 +141,8 @@ def main(argv):
     # Save the test results to the drive
     with open(output_file_path, 'w') as outputfile:
         json.dump(output, outputfile, sort_keys=True, indent=4)
+
+    return 0
 
 
 if __name__ == "__main__":
