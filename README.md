@@ -8,7 +8,7 @@ If you receive the error
 
 	Error: This utility requires python 3.2 or higher
 
-run it the program again like this
+run the program again like this
 
 	python3 http-latency-checker.py
 
