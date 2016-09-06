@@ -32,12 +32,11 @@ def main(argv):
 
     args = parser.parse_args()
 
-    output_dic = []  # initialize output list, this list will contain a list of dictionary
+    output_list = []  # initialize output list, this list will contain a list of dictionary
 
     # Check to see if the request input file exist, if not end the program
     if not os.path.exists(args.input_file_path):
-        print("Error file {} does not exist".format(args.input_file_path))
-        return
+        sys.exit("Error: file {} does not exist or can not be opened".format(args.input_file_path))
 
     # Intialize line_number used to keep what line of the file we are on
     line_number = 0  # Used to keep track of file line number
@@ -130,16 +129,21 @@ def main(argv):
                                     "status reason": status_reason, 'latency_ms': latency_time, 'size': size}
 
             # Append the current test results to the output list
-            output_dic.append(current_test_results)
+            output_list.append(current_test_results)
 
             # close the file handler
             url_get.close()
 
     # Save the test results to the drive
-    with open(args.output_file_path, 'w') as outputfile:
-        json.dump(output_dic, outputfile, sort_keys=True, indent=4)
+    try:
+        with open(args.output_file_path, 'w') as output_file:
+            json.dump(output_list, output_file, sort_keys=True, indent=4)
+    except:
+        #Display an error if the json file can not be written to the drive
+        sys.exit("Error: unable to write file")
 
-    return 0
+    #Exit program after completion 
+    sys.exit(0)
 
 
 if __name__ == "__main__":
